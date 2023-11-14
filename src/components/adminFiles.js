@@ -1,46 +1,67 @@
-import { Link, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { fileUpload, sendFiles } from "../data/local/reducers/user.reducer";
-import { useState } from "react";
-import { toast } from "react-toastify";
+import { Link, useNavigate } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
+import { fileUpload, sendFiles } from '../data/local/reducers/user.reducer'
+import { useState } from 'react'
+import axios from 'axios'
+import { toast } from 'react-toastify'
 
 const AdminFiles = () => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const [body, setBody] = useState("");
-  const [header, setHeader] = useState("");
-  const [buttonName, setButtonName] = useState("");
-  const [buttonUrl, setButtonUrl] = useState("");
-  const [imageFile, setImageFile] = useState(null); // State to store the uploaded image file
-  const addFileProfile = useSelector((state) => state.user.addFilesProfile);
-  const zippedFile = addFileProfile.zip_file;
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const [body, setBody] = useState('')
+  const [header, setHeader] = useState('')
+  const [buttonName, setButtonName] = useState('')
+  const [buttonUrl, setButtonUrl] = useState('')
+  const [imageFile, setImageFile] = useState(null) // State to store the uploaded image file
+  const addFileProfile = useSelector((state) => state.user.addFilesProfile)
+  const zippedFile = addFileProfile.zip_file
 
   const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    setImageFile(file);
-  };
-  
+    const file = e.target.files[0]
+    setImageFile(file)
+  }
+
   const handleSubmit = async (e) => {
-    e.preventDefault();
-  
+    e.preventDefault()
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'x-api-key': 987654,
+      },
+    }
+
     // Create a FormData object to send the file
-    const formData = new FormData();
-    formData.append("header", header);
-    formData.append("body", body);
-    formData.append("botton_name", buttonName);
-    formData.append("botton_url", buttonUrl);
-    formData.append("image", imageFile);
-  
-    const { payload } = await dispatch(fileUpload(formData));
-  
-    if (payload.status_code === "0") {
-      toast.success("File updated Successfully", {
+    const formData = new FormData()
+    formData.append('header', header)
+    formData.append('body', body)
+    formData.append('botton_name', buttonName)
+    formData.append('botton_url', buttonUrl)
+    formData.append('image', imageFile)
+
+    const response = await axios.post(
+      'http://api.transfermelon.com/index.php/v1/api/user_document_creation',
+      formData,
+      config
+    )
+    console.log(response)
+    // if (response.data['status_code'] === '0') {
+    //   navigate('/file_ready')
+    //   sessionStorage.setItem('addFilesProfile', JSON.stringify(response.data))
+    //   sessionStorage.setItem('token', JSON.stringify(response.data.token))
+    // }
+
+    // const { payload } = await dispatch(fileUpload(formData));
+
+    if (response.data['status_code'] === '0') {
+      toast.success('File updated Successfully', {
         position: toast.POSITION.TOP_CENTER,
-      });
+      })
+      sessionStorage.setItem('addFilesProfile', JSON.stringify(response.data))
+      sessionStorage.setItem('token', JSON.stringify(response.data.token))
     }
     // navigate("/dashboard");
-  };
-  
+  }
 
   return (
     <div className="bg-white rounded-md">
@@ -97,11 +118,7 @@ const AdminFiles = () => {
           {/* Upload image */}
           <div className="text-xs grid gap-1">
             <span>Upload Image</span>
-            <input
-              type="file" 
-              accept="image/*" 
-              onChange={handleImageUpload} 
-            />
+            <input type="file" accept="image/*" onChange={handleImageUpload} />
           </div>
           <button
             className="border px-8 py-4 text-xs rounded text-white bg-[#71cb90]"
@@ -112,7 +129,7 @@ const AdminFiles = () => {
         </div>
       </form>
     </div>
-  );
-};
+  )
+}
 
-export default AdminFiles;
+export default AdminFiles

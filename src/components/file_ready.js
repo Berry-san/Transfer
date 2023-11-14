@@ -10,7 +10,6 @@ const FileReady = () => {
   // const addFileProfile = useSelector((state) => state.user.addFilesProfile)
   const addFileProfile = sessionStorage.getItem('addFilesProfile')
   const storedData = JSON.parse(addFileProfile)
-  console.log(storedData)
   const zippedFile = storedData.zip_file
   const [zipCopy, setZipCopy] = useState(false)
   const parts = zippedFile.split('/') // Split the URL by '/'
@@ -23,6 +22,7 @@ const FileReady = () => {
       position: toast.POSITION.TOP_CENTER,
     })
   }
+
   return (
     <div className="px-5 pt-5 pb-10 bg-white rounded-md">
       <div className="flex justify-center">
