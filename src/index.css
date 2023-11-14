@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* import poppins font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+/* import crimson font */
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@500&display=swap');
+
+/* import Inknut Antiqua font */
+@import url('https://fonts.googleapis.com/css2?family=Inknut+Antiqua:wght@300;400;500;600;700;800;900&display=swap');
+
+body {
+  font-family: 'Poppins', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.crimson-font{
+  font-family: 'Crimson Pro', serif;
+}
+
+.inknut-font{
+  font-family: 'Inknut Antiqua', serif;
+}
+
+.hero_img{
+  background-image: url("../src/Media/3.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: top;
+}
+
+/* CUSTOM SCROLLBAR */
+
+/* width */
+::-webkit-scrollbar {
+  width: 3px;
+  height: 3px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #ffffff50;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #71CB9060;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #71CB90;
+}
+
+.text-on-left {
+  display: flex;
+  justify-content: space-between;
+  transition: transform 0.5s ease-in-out;
+  transform: translateX(0);
+}
+
+.text-on-right {
+  display: flex;
+  justify-content: space-between;
+  transition: transform 0.5s ease-in-out;
+  transform: translateX(-100%);
+}
