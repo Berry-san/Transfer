@@ -4,6 +4,7 @@ import { fileUpload, sendFiles } from '../data/local/reducers/user.reducer'
 import { useState } from 'react'
 import axios from 'axios'
 import { toast } from 'react-toastify'
+import { axiosInstance } from '../data/remote/clients/axios'
 
 const AdminFiles = () => {
   const navigate = useNavigate()
@@ -24,13 +25,6 @@ const AdminFiles = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    const config = {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'x-api-key': 987654,
-      },
-    }
-
     // Create a FormData object to send the file
     const formData = new FormData()
     formData.append('header', header)
@@ -39,12 +33,16 @@ const AdminFiles = () => {
     formData.append('botton_url', buttonUrl)
     formData.append('image', imageFile)
 
-    const response = await axios.post(
-      'http://api.transfermelon.com/index.php/v1/api/user_document_creation',
-      formData,
-      config
-    )
-    console.log(response)
+    axiosInstance.post('user_document_creation', formData).then((res) => {
+      if (res.data['status_code'] === '0') {
+        toast.success('File updated Successfully', {
+          position: toast.POSITION.TOP_CENTER,
+        })
+        sessionStorage.setItem('addFilesProfile', JSON.stringify(res.data))
+        sessionStorage.setItem('token', JSON.stringify(res.data.token))
+      }
+      // navigate("/dashboard");
+    })
     // if (response.data['status_code'] === '0') {
     //   navigate('/file_ready')
     //   sessionStorage.setItem('addFilesProfile', JSON.stringify(response.data))
@@ -53,26 +51,26 @@ const AdminFiles = () => {
 
     // const { payload } = await dispatch(fileUpload(formData));
 
-    if (response.data['status_code'] === '0') {
-      toast.success('File updated Successfully', {
-        position: toast.POSITION.TOP_CENTER,
-      })
-      sessionStorage.setItem('addFilesProfile', JSON.stringify(response.data))
-      sessionStorage.setItem('token', JSON.stringify(response.data.token))
-    }
+    // if (response.data['status_code'] === '0') {
+    //   toast.success('File updated Successfully', {
+    //     position: toast.POSITION.TOP_CENTER,
+    //   })
+    //   sessionStorage.setItem('addFilesProfile', JSON.stringify(response.data))
+    //   sessionStorage.setItem('token', JSON.stringify(response.data.token))
+    // }
     // navigate("/dashboard");
   }
 
   return (
     <div className="bg-white rounded-md">
-      <div className="p-5 sticky top-0 bg-white shadow-sm rounded-t-md flex justify-between items-center">
+      <div className="sticky top-0 flex items-center justify-between p-5 bg-white shadow-sm rounded-t-md">
         <p>Update background files</p>
       </div>
 
       <form onSubmit={handleSubmit}>
-        <div className="p-5 grid gap-5">
+        <div className="grid gap-5 p-5">
           {/* Header */}
-          <div className="text-xs grid gap-1">
+          <div className="grid gap-1 text-xs">
             <span>Header</span>
             <input
               type="text"
@@ -83,7 +81,7 @@ const AdminFiles = () => {
             />
           </div>
           {/* Body */}
-          <div className="text-xs grid gap-1">
+          <div className="grid gap-1 text-xs">
             <span>Body</span>
             <input
               type="text"
@@ -94,7 +92,7 @@ const AdminFiles = () => {
             />
           </div>
           {/* Button Name */}
-          <div className="text-xs grid gap-1">
+          <div className="grid gap-1 text-xs">
             <span>Button Name</span>
             <input
               type="text"
@@ -105,7 +103,7 @@ const AdminFiles = () => {
             />
           </div>
           {/* Button URL */}
-          <div className="text-xs grid gap-1">
+          <div className="grid gap-1 text-xs">
             <span>Button URL</span>
             <input
               type="text"
@@ -116,7 +114,7 @@ const AdminFiles = () => {
             />
           </div>
           {/* Upload image */}
-          <div className="text-xs grid gap-1">
+          <div className="grid gap-1 text-xs">
             <span>Upload Image</span>
             <input type="file" accept="image/*" onChange={handleImageUpload} />
           </div>

@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { uploadedFiles } from '../data/local/reducers/user.reducer'
 import axios from 'axios'
+import { axiosInstance } from '../data/remote/clients/axios'
 
 const FileDownload = () => {
   const { id } = useParams()
@@ -32,32 +33,27 @@ const FileDownload = () => {
       }
 
       try {
-        console.log(id)
-
-        const response = await axios.get(
-          `http://api.transfermelon.com/index.php/v1/api/document_details?image=${id}`,
+        const response = await axiosInstance.get(
+          `document_details?image=${id}`,
           config
         )
-
-        console.log(response)
-
-        // Assuming response.data.result is an object
         setApiData(response.data.result)
       } catch (error) {
         console.error('Error fetching data:', error)
       }
     }
 
-    fetchData() // Call the async function
+    fetchData()
   }, [id])
 
+  console.log(apiData)
   const filesWithoutLast = apiData.length > 0 ? apiData.slice(0, -1) : []
   const zipFile = apiData.find((file) => file.image.endsWith('.zip'))
 
   const downloadZipFile = (zipFilePath) => {
     // Create an anchor element for the download
     const anchor = document.createElement('a')
-    anchor.href = `http://159.223.130.31/txtx_transfer_api/${zipFilePath}`
+    anchor.href = `http://api.transfermelon.com/assets/img/campaign_post/${zipFilePath}`
     anchor.download = 'download.zip' // Specify the desired download file name
     anchor.style.display = 'none'
 
@@ -94,7 +90,7 @@ const FileDownload = () => {
                 <div>
                   <p className="text-lg font-medium">Download files.</p>
                   <p className="text-xs opacity-50">
-                    This download contains {apiData.length - 1} files
+                    This download contains {apiData.length} files
                     <span className="font-semibold"></span>, and these files
                     will expire in 16Hrs
                   </p>

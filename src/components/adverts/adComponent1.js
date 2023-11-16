@@ -3,6 +3,7 @@ import axios from 'axios'
 import { Link } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { getUpload } from '../../data/local/reducers/user.reducer'
+import { axiosInstance } from '../../data/remote/clients/axios'
 
 const Advert2 = () => {
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -12,18 +13,8 @@ const Advert2 = () => {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    const config = {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'x-api-key': 987654,
-      },
-    }
-
-    axios
-      .get(
-        'http://api.transfermelon.com/index.php/v1/api/document_list',
-        config
-      )
+    axiosInstance
+      .get('document_list')
       .then((res) => {
         setApiData(res.data.result)
         setIsLoading(false)

@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { addFiles } from '../data/local/reducers/user.reducer'
 import axios from 'axios'
+import { axiosInstance } from '../data/remote/clients/axios'
 
 const AddFiles = () => {
   const [selectedFiles, setSelectedFiles] = useState([])
@@ -65,17 +66,35 @@ const AddFiles = () => {
     selectedFiles.forEach((file, index) => {
       formData.append(`image_${index + 1}`, file)
     })
-    const response = await axios.post(
-      'http://api.transfermelon.com/index.php/v1/api/identity_uploaded',
-      formData,
-      config
-    )
-    console.log(response)
-    if (response.data['status_code'] === '0') {
-      navigate('/file_ready')
-      sessionStorage.setItem('addFilesProfile', JSON.stringify(response.data))
-      sessionStorage.setItem('token', JSON.stringify(response.data.token))
-    }
+
+    //   try {
+    //     const response = await axiosInstance.post('identity_uploaded', formData)
+    //     console.log(response)
+    //     const apiUrl = response.config.url
+    //     console.log('API URL:', apiUrl)
+    //     if (response.data['status_code'] === '0') {
+    //       navigate('/file_ready')
+    //       sessionStorage.setItem('addFilesProfile', JSON.stringify(response.data))
+    //       sessionStorage.setItem('token', JSON.stringify(response.data.token))
+    //     }
+    //   } catch (error) {
+    //     console.error('Error making POST request:', error)
+    //   }
+    console.log(formData)
+    axiosInstance
+      .post(
+        'identity_upload',
+        formData
+        // config
+      )
+      .then((res) => {
+        console.log(res)
+        if (res.data['status_code'] === '0') {
+          navigate('/file_ready')
+          sessionStorage.setItem('addFilesProfile', JSON.stringify(res.data))
+          sessionStorage.setItem('token', JSON.stringify(res.data.token))
+        }
+      })
   }
 
   return (

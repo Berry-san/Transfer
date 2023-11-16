@@ -4,6 +4,7 @@ import { sendFiles } from '../data/local/reducers/user.reducer'
 import { useState } from 'react'
 import { toast } from 'react-toastify'
 import axios from 'axios'
+import { emailInstance } from '../data/remote/clients/axios'
 
 const SendAsMail = () => {
   const navigate = useNavigate()
@@ -25,28 +26,19 @@ const SendAsMail = () => {
     }
 
     // const { payload } = await dispatch(sendFiles(userCredential));
-    const config = {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'x-api-key': 987654,
-      },
-    }
 
-    axios.post(
-      'http://mosquepay.org/mosquepayapi/v1/api/email_message',
-      userCredential,
-      config
-    )
+    emailInstance.post('email_message', userCredential)
 
     toast.success('Mail Send Successfully', {
       position: toast.POSITION.TOP_CENTER,
     })
     //navigate("/dashboard");
   }
+  console.log(zippedFile)
 
   return (
     <div className="bg-white rounded-md">
-      <div className="p-5 sticky top-0 bg-white shadow-sm rounded-t-md flex justify-between items-center">
+      <div className="sticky top-0 flex items-center justify-between p-5 bg-white shadow-sm rounded-t-md">
         <p>Send as email</p>
         <Link to={'/'} className="text-xs text-[#71CB90]">
           Send another file
@@ -56,8 +48,8 @@ const SendAsMail = () => {
       <form onSubmit={handleSubmit}>
         {' '}
         {/* Add a form element with an onSubmit handler */}
-        <div className="p-5 grid gap-5">
-          <div className="text-xs grid gap-1">
+        <div className="grid gap-5 p-5">
+          <div className="grid gap-1 text-xs">
             <span>Title</span>
             <input
               type="text"
@@ -67,7 +59,7 @@ const SendAsMail = () => {
               onChange={(e) => setSubject(e.target.value)} // Update the state
             />
           </div>
-          <div className="text-xs grid gap-1">
+          <div className="grid gap-1 text-xs">
             <span>Email address</span>
             <input
               type="text"

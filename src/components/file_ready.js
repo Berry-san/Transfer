@@ -33,17 +33,17 @@ const FileReady = () => {
         type="text"
         name=""
         id=""
-        value={`http://localhost:3000/fileDownload/${fileId}`}
+        value={`http://api.transfermelon.com/assets/img/user_account/${fileId}`}
         disabled
         className="p-4 rounded-sm text-sm md:text-xs w-full border border-[#c4c4c432] bg-[#c4c4c416] truncatem my-5"
       />
       <div className="flex justify-center">
         <button className="border px-8 py-4 text-xs rounded text-white bg-[#71cb90]">
           <CopyToClipboard
-            text={`http://localhost:3000/fileDownload/${fileId}`}
+            text={`http://api.transfermelon.com/assets/img/user_account/${fileId}`}
             onCopy={handleCopyZipped}
           >
-            <span className=" cursor-pointer text-[#127ec8]">
+            <span className=" cursor-pointer text-[#127ec8]" disabled={zipCopy}>
               {zipCopy ? 'Link Copied!' : 'Copy link'}
             </span>
           </CopyToClipboard>
